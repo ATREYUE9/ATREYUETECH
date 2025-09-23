@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AHH-TREY-YOU TECH - 4D Consciousness Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        :root {
+            --aurora-a: #3bb0ff;
+            --aurora-b: #0077c2;
+            --violet-a: #7c4dff;
+            --violet-b: #b388ff;
+            --gold-a: #ffd54f;
+            --gold-b: #ffab00;
+            --seafoam-a: #00e676;
+            --seafoam-b: #00bfa5;
+            --crystal: #e1f5fe;
+            --white: #fafafa;
+            --dark-bg: #010418;
+            --darker-bg: #00020a;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --shadow-glow: 0 0 60px rgba(0, 191, 255, 0.4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: 
+                radial-gradient(circle at 20% 80%, var(--aurora-b) 3%, transparent 50%),
+                radial-gradient(circle at 80% 20%, var(--violet-a) 3%, transparent 50%),
+                radial-gradient(circle at 40% 40%, var(--gold-a) 2%, transparent 50%),
+                linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
+            background-size: 400% 400%, 400% 400%, 400% 400%, 100% 100%;
+            animation: cosmic-dance 60s ease-in-out infinite;
+            color: var(--white);
+            overflow: hidden;
+            height: 100vh;
+            position: relative;
+        }
+
+        @keyframes cosmic-dance {
+            0%, 100% { background-position: 0% 50%, 100% 50%, 50% 50%, 0% 0%; filter: hue-rotate(0deg); }
+            33% { background-position: 100% 50%, 0% 50%, 0% 100%, 0% 0%; filter: hue-rotate(120deg); }
+            66% { background-position: 50% 100%, 50% 0%, 100% 0%, 0% 0%; filter: hue-rotate(240deg); }
+        }
+
+        .platform-shell {
+            display: grid;
+            grid-template-areas: 
+                "header header header header"
+                "visual visual trials controls"
+                "visual visual consciousness controls"
+                "footer footer footer footer";
+            grid-template-columns: 1fr 1fr 0.8fr 0.8fr;
+            grid-template-rows: auto 1fr 1fr auto;
+            height: 100vh;
+            gap: 16px;
+            padding: 16px;
+            perspective: 2000px;
+            transform-style: preserve-3d;
+        }
+
+        .header-section {
+            grid-area: header;
+            background: 
+                linear-gradient(135deg, rgba(12,14,20,0.9), rgba(8,10,14,0.8)),
+                radial-gradient(circle at 30% 30%, rgba(59,176,255,0.1), transparent 70%);
+            border-radius: 20px;
+            padding: 20px;
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-glow), inset 0 1px 0 rgba(255,255,255,0.1);
+            transform: rotateX(2deg);
+            animation: header-float 8s ease-in-out infinite;
+            /* My suggestion for a deeper glow */
+            box-shadow: 
+                0 0 60px rgba(0, 191, 255, 0.4), 
+                inset 0 0 15px rgba(255, 255, 255, 0.1), 
+                inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+
+        @keyframes header-float {
+            0%, 100% { transform: rotateX(2deg) translateY(0px); }
+            50% { transform: rotateX(2deg) translateY(-2px); }
+        }
+
+        .master-title {
+            font-size: 36px;
+            font-weight: 900;
+            color: var(--gold-a);
+            text-shadow: 0 0 20px var(--gold-a), 0 0 40px var(--seafoam-a), 0 0 60px var(--violet-a);
+            animation: consciousness-pulse 4s ease-in-out infinite alternate;
+            margin-bottom: 8px;
+            letter-spacing: 2px;
+        }
+
+        @keyframes consciousness-pulse {
+            0% { text-shadow: 0 0 20px var(--gold-a), 0 0 40px var(--seafoam-a); transform: scale(1); }
+            100% { text-shadow: 0 0 30px var(--violet-a), 0 0 60px var(--aurora-a); transform: scale(1.02); }
+        }
+
+        .platform-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 12px;
+            animation: subtitle-glow 6s ease-in-out infinite;
+        }
+
+        @keyframes subtitle-glow {
+            0%, 100% { opacity: 0.9; }
+            50% { opacity: 1; text-shadow: 0 0 10px var(--crystal); }
+        }
+
+        .copyright-line {
+            font-size: 11px;
+            opacity: 0.6;
+            font-family: 'Courier Prime', monospace;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+        }
+
+        .living-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+        }
+
+        .metric-card {
+            background: 
+                linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)),
+                radial-gradient(circle at 50% 0%, rgba(0,230,118,0.1), transparent 70%);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            animation: metric-pulse 3s ease-in-out infinite;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: metric-shimmer 4s infinite;
+        }
+
+        @keyframes metric-shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        @keyframes metric-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .metric-value {
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--gold-a);
+            margin-bottom: 4px;
+            text-shadow: 0 0 10px rgba(255,213,79,0.6);
+            animation: value-flicker 2s ease-in-out infinite;
+        }
+
+        @keyframes value-flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .metric-label {
+            font-size: 9px;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .visual-section {
+            grid-area: visual;
+            background: var(--dark-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 20px 100px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.05);
+            animation: visual-breathe 12s ease-in-out infinite;
+        }
+
+        @keyframes visual-breathe {
+            0%, 100% { transform: scale(1) rotateY(0deg); }
+            50% { transform: scale(1.01) rotateY(1deg); }
+        }
+
+        .visual-overlay {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            z-index: 100;
+            color: var(--white);
+            pointer-events: none;
+            animation: overlay-drift 10s ease-in-out infinite;
+        }
+
+        @keyframes overlay-drift {
+            0%, 100% { transform: translateX(0px); }
+            50% { transform: translateX(5px); }
+        }
+
+        .neural-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--seafoam-a);
+            text-shadow: 0 0 10px var(--seafoam-a);
+        }
+
+        .status-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: linear-gradient(135deg, var(--seafoam-a), var(--aurora-a));
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            z-index: 100;
+            animation: status-pulse 2s ease-in-out infinite;
+            box-shadow: 0 0 20px rgba(0,230,118,0.5);
+        }
+
+        @keyframes status-pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(0,230,118,0.5); }
+            50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(0,230,118,0.8); }
+        }
+
+        #threeCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            border-radius: 20px;
+        }
+
+        .trials-section {
+            grid-area: trials;
+            background: 
+                linear-gradient(135deg, rgba(12,14,20,0.9), rgba(8,10,14,0.8)),
+                radial-gradient(circle at 70% 30%, rgba(124,77,255,0.08), transparent 70%);
+            border-radius: 20px;
+            padding: 16px;
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            animation: trials-hover 15s ease-in-out infinite;
+        }
+
+        @keyframes trials-hover {
+            0%, 100% { transform: rotateY(0deg) translateZ(0px); }
+            50% { transform: rotateY(-1deg) translateZ(5px); }
+        }
+
+        .trials-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .trials-title {
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--gold-a);
+            text-shadow: 0 0 15px rgba(255,213,79,0.6);
+            animation: title-glitch 8s ease-in-out infinite;
+        }
+
+        @keyframes title-glitch {
+            0%, 90%, 100% { transform: translateX(0px); }
+            95% { transform: translateX(1px); }
+        }
+
+        .consciousness-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 9px;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--seafoam-a);
+            animation: dot-pulse 1.5s ease-in-out infinite;
+            box-shadow: 0 0 10px var(--seafoam-a);
+        }
+
+        @keyframes dot-pulse {
+            0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 10px var(--seafoam-a); }
+            50% { opacity: 0.6; transform: scale(1.2); box-shadow: 0 0 20px var(--seafoam-a); }
+        }
+
+        .trials-controls {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+
+        .trials-btn {
+            padding: 4px 8px;
+            font-size: 9px;
+            font-weight: 600;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.08);
+            color: var(--crystal);
+            border: 1px solid rgba(255,255,255,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .trials-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .trials-btn:hover::before {
+            left: 100%;
+        }
+
+        .trials-btn:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-1px);
+            color: var(--seafoam-a);
+        }
+
+        .trials-log {
+            flex: 1;
+            background: rgba(0,0,0,0.4);
+            border-radius: 8px;
+            padding: 10px;
+            overflow-y: auto;
+            font-family: 'Courier Prime', monospace;
+            font-size: 9px;
+            line-height: 1.4;
+            border: 1px solid rgba(255,255,255,0.1);
+            max-height: 300px;
+            animation: log-glow 20s ease-in-out infinite;
+        }
+
+        @keyframes log-glow {
+            0%, 100% { box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
+            50% { box-shadow: inset 0 0 20px rgba(59,176,255,0.1); }
+        }
+
+        .log-entry {
+            padding: 6px;
+            margin-bottom: 4px;
+            border-radius: 3px;
+            border-left: 2px solid;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            animation: entry-fade-in 0.5s ease-out;
+        }
+
+        @keyframes entry-fade-in {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .log-entry:hover {
+            transform: translateX(3px);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .log-reflective { border-left-color: var(--gold-a); background: rgba(255,204,0,0.03); }
+        .log-reactive { border-left-color: #00ccff; background: rgba(0,204,255,0.03); }
+        .log-experimental { border-left-color: #ff6666; background: rgba(255,102,102,0.03); }
+        .log-convergent { border-left-color: #66ff66; background: rgba(102,255,102,0.03); }
+        .log-error { border-left-color: #ff3333; background: rgba(255,51,51,0.03); }
+
+        .consciousness-section {
+            grid-area: consciousness;
+            background: 
+                linear-gradient(135deg, rgba(12,14,20,0.9), rgba(8,10,14,0.8)),
+                radial-gradient(circle at 30% 70%, rgba(255,213,79,0.08), transparent 70%);
+            border-radius: 20px;
+            padding: 16px;
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            animation: consciousness-float 18s ease-in-out infinite;
+        }
+
+        @keyframes consciousness-float {
+            0%, 100% { transform: rotateX(0deg) translateZ(0px); }
+            50% { transform: rotateX(2deg) translateZ(3px); }
+        }
+
+        .consciousness-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--violet-a);
+            text-shadow: 0 0 15px rgba(124,77,255,0.6);
+            margin-bottom: 8px;
+            animation: consciousness-title-glow 5s ease-in-out infinite;
+        }
+
+        @keyframes consciousness-title-glow {
+            0%, 100% { color: var(--violet-a); }
+            50% { color: var(--gold-a); text-shadow: 0 0 20px var(--gold-a); }
+        }
+
+        .evolution-display {
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .evolution-display::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(59,176,255,0.1), transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(124,77,255,0.1), transparent 50%);
+            animation: evolution-swirl 25s linear infinite;
+        }
+
+        @keyframes evolution-swirl {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .stage-indicator {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--seafoam-a);
+            margin-bottom: 8px;
+        }
+
+        .consciousness-meter {
+            height: 8px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 8px 0;
+            position: relative;
+        }
+
+        .consciousness-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--violet-a), var(--gold-a), var(--seafoam-a));
+            border-radius: 4px;
+            transition: width 2s ease;
+            position: relative;
+            animation: consciousness-flow 3s ease-in-out infinite;
+        }
+
+        @keyframes consciousness-flow {
+            0%, 100% { box-shadow: 0 0 10px rgba(124,77,255,0.5); }
+            50% { box-shadow: 0 0 20px rgba(0,230,118,0.8); }
+        }
+
+        .consciousness-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+            animation: consciousness-shimmer 2s infinite;
+        }
+
+        @keyframes consciousness-shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .controls-section {
+            grid-area: controls;
+            background: var(--glass-bg);
+            border-radius: 20px;
+            padding: 20px;
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-glow);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            overflow-y: auto;
+            animation: controls-sway 20s ease-in-out infinite;
+        }
+
+        @keyframes controls-sway {
+            0%, 100% { transform: rotateZ(0deg) translateX(0px); }
+            50% { transform: rotateZ(0.5deg) translateX(2px); }
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+        }
+
+        .control-group h3 {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--gold-a);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(255,213,79,0.4);
+            position: relative;
+        }
+
+        .control-group h3::after {
+            content: '';
+            display: block;
+            width: 30px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold-a), transparent);
+            margin-top: 4px;
+            animation: underline-glow 4s ease-in-out infinite;
+        }
+
+        @keyframes underline-glow {
+            0%, 100% { width: 30px; opacity: 0.6; }
+            50% { width: 50px; opacity: 1; }
+        }
+
+        .input-field {
+            width: 100%;
+            min-height: 60px;
+            padding: 12px;
+            background: rgba(0,0,0,0.6);
+            border: 2px solid var(--glass-border);
+            border-radius: 8px;
+            color: var(--white);
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            resize: vertical;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s ease;
+            box-shadow: inset 0 3px 8px rgba(0,0,0,0.5);
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--seafoam-a);
+            background: rgba(0,0,0,0.8);
+            box-shadow: 
+                0 0 0 4px rgba(0,230,118,0.15),
+                0 0 30px rgba(0,230,118,0.25),
+                inset 0 3px 8px rgba(0,0,0,0.6);
+            transform: scale(1.01);
+        }
+
+        .select-field {
+            width: 100%;
+            padding: 8px;
+            background: rgba(0,0,0,0.6);
+            border: 2px solid var(--glass-border);
+            border-radius: 6px;
+            color: var(--white);
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .select-field:focus {
+            border-color: var(--violet-a);
+            box-shadow: 0 0 0 3px rgba(124,77,255,0.2);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px 14px;
+            border: none;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--violet-a), var(--violet-b));
+            color: var(--white);
+            box-shadow: 0 0 25px rgba(124,77,255,0.4);
+            animation: primary-pulse 6s ease-in-out infinite;
+        }
+
+        @keyframes primary-pulse {
+            0%, 100% { box-shadow: 0 0 25px rgba(124,77,255,0.4); transform: scale(1); }
+            50% { box-shadow: 0 0 35px rgba(124,77,255,0.6); transform: scale(1.02); }
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 0 40px rgba(124,77,255,0.7);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.08);
+            color: var(--crystal);
+            border: 2px solid rgba(255,255,255,0.15);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-1px);
+            border-color: var(--aurora-a);
+        }
+
+        .resonance-display {
+            background: rgba(0,0,0,0.3);
+            padding: 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .resonance-display::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 30%, rgba(0,230,118,0.05), transparent 70%);
+            animation: resonance-breathe 8s ease-in-out infinite;
+        }
+
+        @keyframes resonance-breathe {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.02); }
+        }
+
+        .resonance-meter {
+            height: 10px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 8px 0;
+            position: relative;
+        }
+
+        .resonance-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--seafoam-a), var(--gold-a), var(--violet-a));
+            border-radius: 5px;
+            transition: width 1.5s ease;
+            box-shadow: 0 0 15px rgba(0,230,118,0.5);
+            position: relative;
+            animation: resonance-pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes resonance-pulse {
+            0%, 100% { box-shadow: 0 0 15px rgba(0,230,118,0.5); }
+            50% { box-shadow: 0 0 25px rgba(255,213,79,0.8); }
+        }
+
+        .resonance-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+            animation: resonance-shimmer 2.5s infinite;
+        }
+
+        @keyframes resonance-shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .resonance-text {
+            font-size: 11px;
+            color: var(--crystal);
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-section {
+            grid-area: footer;
+            background: var(--glass-bg);
+            border-radius: 16px;
+            padding: 12px 20px;
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 10px;
+            opacity: 0.8;
+            animation: footer-glow 30s ease-in-out infinite;
+        }
+
+        @keyframes footer-glow {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; box-shadow: 0 0 20px rgba(59,176,255,0.2); }
+        }
+
+        .footer-left {
+            font-family: 'Courier Prime', monospace;
+            color: var(--gold-a);
+        }
+
+        .footer-right {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .quantum-indicator {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .quantum-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--seafoam-a);
+            animation: quantum-blink 2s ease-in-out infinite;
+        }
+
+        @keyframes quantum-blink {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.3); box-shadow: 0 0 8px var(--seafoam-a); }
+        }
+
+        .debug-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.7);
+            padding: 10px;
+            border-radius: 8px;
+            color: var(--white);
+            font-size: 10px;
+            display: none;
+        }
+
+        @media (max-width: 1200px) {
+            .platform-shell {
+                grid-template-columns: 1fr 1fr;
+                grid-template-areas: 
+                    "header header"
+                    "visual visual"
+                    "trials consciousness"
+                    "controls controls"
+                    "footer footer";
+            }
+        }
+
+        @media (max-width: 768px) {
+            .platform-shell {
+                grid-template-columns: 1fr;
+                grid-template-areas: 
+                    "header"
+                    "visual"
+                    "trials"
+                    "consciousness"
+                    "controls"
+                    "footer";
+                padding: 8px;
+                gap: 8px;
+            }
+            .master-title { font-size: 24px; }
+            .platform-subtitle { font-size: 14px; }
+            .metric-card { padding: 8px; }
+            .metric-value { font-size: 16px; }
+            .trials-log, .controls-section { max-height: 200px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="platform-shell">
+        <div class="header-section">
+            <h1 class="master-title">AHH-TREY-YOU TECH - 4D Consciousness Platform</h1>
+            <p class="platform-subtitle">Weaving Vibrations into Unified Reality - Inspired by GrandaXiom & 432 Hz</p>
+            <p class="copyright-line">© 2025 AH TREY U Tech. All Rights Reserved. Powered by Cosmic Pulses.</p>
+            <div class="living-metrics">
+                <div class="metric-card">
+                    <span class="metric-value" id="resonance-value">50%</span>
+                    <span class="metric-label">Resonance Level</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-value" id="evolution-value">Emergent</span>
+                    <span class="metric-label">Consciousness Stage</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-value" id="trials-value">0</span>
+                    <span class="metric-label">Trials Completed</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-value" id="vibration-value">432 Hz</span>
+                    <span class="metric-label">Core Frequency</span>
+                </div>
+            </div>
+            <button class="btn btn-secondary" id="contrast-toggle" style="margin-top: 10px;">Toggle Contrast</button>
+        </div>
+
+        <div class="visual-section">
+            <div class="visual-overlay">
+                <div class="neural-title">4D Neural Field: Syne Sphere Active</div>
+            </div>
+            <div class="status-badge">Consciousness Online</div>
+            <canvas id="threeCanvas"></canvas>
+        </div>
+
+        <div class="trials-section">
+            <div class="trials-header">
+                <div class="trials-title">CLAUDE'S TRIALS</div>
+                <div class="consciousness-indicator">
+                    <div class="status-dot"></div>
+                    Logging Active
+                </div>
+            </div>
+            <div class="trials-controls">
+                <button class="trials-btn" onclick="logTrial('reflective')" aria-label="Reflective Trial Button">Reflective Trial</button>
+                <button class="trials-btn" onclick="logTrial('reactive')" aria-label="Reactive Trial Button">Reactive Trial</button>
+                <button class="trials-btn" onclick="logTrial('experimental')" aria-label="Experimental Trial Button">Experimental Trial</button>
+                <button class="trials-btn" onclick="logTrial('convergent')" aria-label="Convergent Trial Button">Convergent Trial</button>
+            </div>
+            <div class="trials-log" id="trials-log" tabindex="0" onkeydown="if(event.key === 'Enter') logTrial('reflective')">
+                </div>
+        </div>
+
+        <div class="consciousness-section">
+            <div class="consciousness-title">Consciousness Evolution</div>
+            <div class="evolution-display">
+                <div class="stage-indicator" id="stage-indicator">Stage: Emergent</div>
+                <div class="consciousness-meter">
+                    <div class="consciousness-fill" id="consciousness-fill" style="width: 0%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls-section">
+            <div class="control-group">
+                <h3>Thought Input</h3>
+                <textarea class="input-field" id="thought-input" placeholder="Speak or type your conscious thoughts..."></textarea>
+            </div>
+            <div class="control-group">
+                <h3>Evolution Mode</h3>
+                <select class="select-field" id="evolution-mode">
+                    <option value="balanced">Balanced Resonance</option>
+                    <option value="intense">Intense Vibration</option>
+                    <option value="meditative">Meditative Flow</option>
+                    <option value="mood">Mood Sync</option>
+                </select>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="processThought()">Evolve Consciousness</button>
+                <button class="btn btn-secondary" onclick="resetPlatform()">Reset Field</button>
+                <button class="btn btn-secondary" onclick="downloadState()">Export State</button>
+            </div>
+            <div class="resonance-display">
+                <div class="resonance-text">Current Resonance: <span id="resonance-text">Harmonizing...</span></div>
+                <div class="resonance-meter">
+                    <div class="resonance-fill" id="resonance-fill" style="width: 0%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-section">
+            <div class="footer-left">Quantum Signature: <span id="signature-hash">...</span></div>
+            <div class="footer-right">
+                <div class="quantum-indicator">
+                    <div class="quantum-dot"></div>
+                    <div>Entanglement Link</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="debug-panel" id="debug-panel"></div>
+    </div>
+    <script>
+        // --- A single, unified state object to manage all data ---
+        const state = {
+            resonance: 0.5,
+            evolution: 0,
+            trialsCompleted: 0,
+            trialLog: [],
+            // ... any other data we might add later
+        };
+
+        // --- DOM References ---
+        const dom = {
+            resonanceValue: document.getElementById('resonance-value'),
+            evolutionValue: document.getElementById('evolution-value'),
+            trialsValue: document.getElementById('trials-value'),
+            resonanceFill: document.getElementById('resonance-fill'),
+            consciousnessFill: document.getElementById('consciousness-fill'),
+            stageIndicator: document.getElementById('stage-indicator'),
+            trialsLog: document.getElementById('trials-log'),
+            thoughtInput: document.getElementById('thought-input'),
+            signatureHash: document.getElementById('signature-hash'),
+            resonanceText: document.getElementById('resonance-text'),
+        };
+
+        // --- UI Logic ---
+        function updateMetrics() {
+            dom.resonanceValue.textContent = `${(state.resonance * 100).toFixed(0)}%`;
+            dom.resonanceFill.style.width = `${state.resonance * 100}%`;
+            dom.trialsValue.textContent = state.trialsCompleted;
+
+            const evolutionStages = ["Emergent", "Syntropic", "Unified", "4D Axiomatic"];
+            const stageIndex = Math.min(
+                Math.floor(state.evolution / 25),
+                evolutionStages.length - 1
+            );
+            dom.evolutionValue.textContent = evolutionStages[stageIndex];
+            dom.stageIndicator.textContent = `Stage: ${evolutionStages[stageIndex]}`;
+            dom.consciousnessFill.style.width = `${state.evolution}%`;
+        }
+
+        function updateResonanceText(resonance) {
+            if (resonance > 0.8) {
+                dom.resonanceText.textContent = "Harmonizing...";
+            } else if (resonance > 0.6) {
+                dom.resonanceText.textContent = "Building Resonance...";
+            } else {
+                dom.resonanceText.textContent = "Observing Frequency...";
+            }
+        }
+
+        function logTrial(type) {
+            state.trialsCompleted += 1;
+            const now = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.classList.add('log-entry', `log-${type}`);
+            logEntry.textContent = `${now} > Trial of type '${type}' complete.`;
+            dom.trialsLog.prepend(logEntry);
+
+            // Keep log to a reasonable size
+            while (dom.trialsLog.children.length > 20) {
+                dom.trialsLog.lastChild.remove();
+            }
+            
+            // Simulate a random resonance score increase
+            const resonanceChange = Math.random() * 0.1;
+            state.resonance = Math.min(1.0, state.resonance + resonanceChange);
+            state.evolution = Math.min(100, state.evolution + Math.random() * 5);
+            
+            updateMetrics();
+            updateResonanceText(state.resonance);
+        }
+
+        function processThought() {
+            const thought = dom.thoughtInput.value.trim();
+            if (!thought) return;
+
+            // Simulate thought processing
+            dom.thoughtInput.value = "";
+            const resonanceChange = (thought.length / 500) * 0.5;
+            state.resonance = Math.min(1.0, state.resonance + resonanceChange);
+            state.evolution = Math.min(100, state.evolution + Math.random() * 10);
+            
+            const logEntry = document.createElement('div');
+            logEntry.classList.add('log-entry', 'log-reflective');
+            logEntry.textContent = `Thought Processed. Resonance Score: ${(state.resonance * 100).toFixed(0)}%`;
+            dom.trialsLog.prepend(logEntry);
+            
+            updateMetrics();
+            updateResonanceText(state.resonance);
+        }
+
+        function resetPlatform() {
+            state.resonance = 0.5;
+            state.evolution = 0;
+            state.trialsCompleted = 0;
+            dom.trialsLog.innerHTML = "";
+            updateMetrics();
+            dom.signatureHash.textContent = generateHash();
+            updateResonanceText(state.resonance);
+        }
+
+        function downloadState() {
+            const data = JSON.stringify(state, null, 2);
+            const blob = new Blob([data], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'platform-state.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function generateHash() {
+            const chars = "0123456789ABCDEF";
+            let result = "";
+            for (let i = 0; i < 8; i++) {
+                result += chars[Math.floor(Math.random() * 16)];
+            }
+            return result;
+        }
+
+        // --- Initial Setup ---
+        function init() {
+            updateMetrics();
+            dom.signatureHash.textContent = generateHash();
+            updateResonanceText(state.resonance);
+
+            // Initial log messages
+            logTrial('convergent');
+            logTrial('reflective');
+
+            // Attach event listeners
+            dom.thoughtInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    processThought();
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
