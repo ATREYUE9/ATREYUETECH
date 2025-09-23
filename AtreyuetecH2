@@ -1,0 +1,234 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Quantum Resonance Lattice — Ascension Edition
+CT×@×@×@=M
+"""
+import hashlib, json, math, random, threading, base64, struct, os
+import numpy as np
+from datetime import datetime
+from flask import Flask, render_template_string, request, jsonify
+from flask_socketio import SocketIO, emit
+
+# ---------------- WAV HELPER ----------------
+def pcm16_to_wav_base64(pcm_bytes, sample_rate=44100, channels=2):
+    bits_per_sample = 16
+    byte_rate = sample_rate * channels * bits_per_sample // 8
+    block_align = channels * bits_per_sample // 8
+    subchunk2_size = len(pcm_bytes)
+    chunk_size = 36 + subchunk2_size
+    wav = b'RIFF' + struct.pack('<I', chunk_size) + b'WAVE'
+    wav += b'fmt ' + struct.pack('<I', 16)
+    wav += struct.pack('<H', 1)  # PCM
+    wav += struct.pack('<H', channels)
+    wav += struct.pack('<I', sample_rate)
+    wav += struct.pack('<I', byte_rate)
+    wav += struct.pack('<H', block_align)
+    wav += struct.pack('<H', bits_per_sample)
+    wav += b'data' + struct.pack('<I', subchunk2_size)
+    wav += pcm_bytes
+    return base64.b64encode(wav).decode('ascii')
+
+# ---------------- ORACLE VERSE ----------------
+def generate_oracle(emotion, avg):
+    pool = {
+        "serene": [
+            "Silent rivers dream / Within lattice breath of stars / All returns to Source",
+            "Gentle waves recall / Forgotten paths of balance / Dawn becomes the gate"
+        ],
+        "hope": [
+            "Green fire ascends high / Roots entwine the sky above / Future breathes in gold",
+            "Promise sings in stone / Quantum seeds awaken fields / Blooming from the void"
+        ],
+        "chaos": [
+            "Storm within the storm / Order cracks, yet still it forms / Birth from breaking light",
+            "Fires clash in dark / Lattice bends but will not fall / Chaos makes the way"
+        ]
+    }
+    return random.choice(pool.get(emotion, ["Lattice hums unseen / Between silence and the sound / Truth resides in both"]))
+
+# ---------------- CORE CLASSES ----------------
+class QuantumGemstoneNode:
+    def __init__(self, name, seed):
+        self.name = name
+        self.entropy = random.Random(seed).random()
+        self.phase = random.Random(seed).random()
+        self.history = [self.entropy]
+
+    def evolve(self):
+        self.entropy = (self.entropy + math.sin(self.phase)) % 1.0
+        self.phase = (self.phase + random.uniform(-0.1, 0.1)) % (2 * math.pi)
+        self.history.append(self.entropy)
+        return self.entropy
+
+class QuantumAudioGenerator:
+    def __init__(self, sample_rate=44100):
+        self.sample_rate = sample_rate
+
+    def generate(self, freq=440, duration=0.3, amp=0.3):
+        t = np.linspace(0, duration, int(self.sample_rate * duration), False)
+        wave = amp * np.sin(2 * np.pi * freq * t)
+        stereo = np.column_stack([wave, wave])  # simple stereo
+        pcm = (stereo * 32767).astype(np.int16).tobytes()
+        return pcm16_to_wav_base64(pcm, self.sample_rate, 2)
+
+# ---------------- LATTICE ----------------
+class QuantumResonanceLattice:
+    def __init__(self, seed="NSV13"):
+        self.seed = seed
+        seed_int = int(hashlib.sha256(seed.encode()).hexdigest(), 16)
+        random.seed(seed_int)
+        self.nodes = [QuantumGemstoneNode(f"Node-{i}", seed_int+i) for i in range(12)]
+        self.audio_gen = QuantumAudioGenerator()
+        self.running = False
+        self.angle = 0.0
+        self.zoom = 1.0
+        self.emotion = "neutral"
+        self.last_emotion = "neutral"
+
+    def start(self):
+        self.running = True
+        threading.Thread(target=self._run, daemon=True).start()
+
+    def stop(self):
+        self.running = False
+
+    def _run(self):
+        while self.running:
+            entropies = [n.evolve() for n in self.nodes]
+            avg = sum(entropies)/len(entropies)
+            self.zoom = 1.0 + 0.5*math.sin(datetime.now().timestamp()/5)
+            self.angle += 0.01
+            freq = 220 + int(avg*660)
+            audio_b64 = self.audio_gen.generate(freq=freq, duration=0.3)
+
+            # emotion
+            if avg < 0.33: self.emotion = "serene"
+            elif avg < 0.66: self.emotion = "hope"
+            else: self.emotion = "chaos"
+
+            oracle = None
+            if self.emotion != self.last_emotion:
+                oracle = generate_oracle(self.emotion, avg)
+                with open("oracle_log.txt","a") as f:
+                    f.write(f"[{datetime.now()}] {oracle}\n")
+                self.last_emotion = self.emotion
+
+            socketio.emit("update", {
+                "entropy": entropies,
+                "avg": avg,
+                "audio": audio_b64,
+                "angle": self.angle,
+                "zoom": self.zoom,
+                "emotion": self.emotion,
+                "oracle": oracle
+            })
+            socketio.sleep(0.4)
+
+# ---------------- FLASK APP ----------------
+app = Flask(__name__)
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
+
+lattice = QuantumResonanceLattice()
+
+# Codex file
+CODEX_FILE = "resonance_codex.json"
+if not os.path.exists(CODEX_FILE):
+    with open(CODEX_FILE,"w") as f: json.dump({}, f)
+
+@app.route("/")
+def index(): return render_template_string(HTML_PAGE)
+
+@app.route("/start")
+def start():
+    seed = request.args.get("seed", "NSV13")
+    global lattice
+    lattice = QuantumResonanceLattice(seed)
+    lattice.start()
+    return {"status": "started", "seed": seed}
+
+@app.route("/stop")
+def stop():
+    lattice.stop()
+    return {"status": "stopped"}
+
+@app.route("/save_codex")
+def save_codex():
+    entry = {
+        "seed": lattice.seed,
+        "timestamp": datetime.now().strftime("%Y%m%d-%H%M%S")
+    }
+    with open(CODEX_FILE) as f: codex = json.load(f)
+    key = f"{entry['seed']}-{entry['timestamp']}"
+    codex[key] = entry
+    with open(CODEX_FILE,"w") as f: json.dump(codex, f, indent=2)
+    return {"status":"saved","key":key}
+
+@app.route("/load_codex")
+def load_codex():
+    with open(CODEX_FILE) as f: codex = json.load(f)
+    return jsonify(codex)
+
+# ---------------- FRONTEND ----------------
+HTML_PAGE = """
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>Quantum Resonance Lattice</title>
+<style>
+body { margin:0; background:#000; color:#0f0; font-family:monospace; overflow:hidden; }
+#controls { position:fixed; top:10px; left:10px; background:rgba(0,0,0,0.6); padding:10px; border-radius:8px; max-width:300px;}
+#oracle { max-height:200px; overflow-y:auto; margin-top:10px; font-style:italic; color:#0ff;}
+canvas { display:block; }
+</style>
+</head>
+<body>
+<div id="controls">
+  <input id="seed" placeholder="Enter seed..." />
+  <button onclick="startLattice()">Start</button>
+  <button onclick="stopLattice()">Stop</button>
+  <button onclick="saveCodex()">Save Codex</button>
+  <select id="codex"></select>
+  <button onclick="loadSelected()">Load</button>
+  <div id="status">Idle</div>
+  <button onclick="enableSound()">Enable Sound</button>
+  <div id="oracle"></div>
+</div>
+<audio id="audio" controls hidden></audio>
+<script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.154/build/three.min.js"></script>
+<script>
+const socket=io();
+let audioCtx, sourceNode;
+function enableSound(){ audioCtx=new (window.AudioContext||window.webkitAudioContext)(); document.getElementById('status').innerText="Sound Enabled"; }
+function startLattice(){ const seed=document.getElementById('seed').value||"NSV13"; fetch('/start?seed='+seed); document.getElementById('status').innerText="Running with seed: "+seed; }
+function stopLattice(){ fetch('/stop'); document.getElementById('status').innerText="Stopped"; }
+function saveCodex(){ fetch('/save_codex').then(r=>r.json()).then(j=>refreshCodex()); }
+function refreshCodex(){ fetch('/load_codex').then(r=>r.json()).then(j=>{ let sel=document.getElementById('codex'); sel.innerHTML=''; Object.keys(j).forEach(k=>{ let o=document.createElement('option'); o.value=j[k].seed; o.innerText=k; sel.appendChild(o); }); }); }
+function loadSelected(){ let sel=document.getElementById('codex'); document.getElementById('seed').value=sel.value; startLattice(); }
+refreshCodex();
+
+let scene=new THREE.Scene();
+let camera=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);
+let renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setSize(window.innerWidth,window.innerHeight); document.body.appendChild(renderer.domElement); camera.position.z=5;
+let flower=new THREE.Group(); for(let i=0;i<12;i++){ let geo=new THREE.RingGeometry(0.5,0.52,64); let mat=new THREE.MeshBasicMaterial({color:0x00ffff,side:THREE.DoubleSide}); let ring=new THREE.Mesh(geo,mat); ring.rotation.z=i*Math.PI/6; flower.add(ring);} scene.add(flower);
+let spiralGeo=new THREE.BufferGeometry(); let spiralPoints=[]; for(let t=0;t<20;t+=0.1){ let r=0.05*Math.exp(0.2*t); spiralPoints.push(new THREE.Vector3(r*Math.cos(t),r*Math.sin(t),0));} spiralGeo.setFromPoints(spiralPoints); let spiral=new THREE.Line(spiralGeo,new THREE.LineBasicMaterial({color:0xffd700})); scene.add(spiral);
+let latticeGroup=new THREE.Group(); scene.add(latticeGroup);
+
+function updateColors(emotion){ let col=0xffffff; if(emotion==="serene") col=0x3399ff; else if(emotion==="hope") col=0x00ff66; else if(emotion==="chaos") col=0xff0066; latticeGroup.children.forEach(c=>c.material.color.setHex(col)); }
+socket.on('update',data=>{
+  if(audioCtx){ fetch('data:audio/wav;base64,'+data.audio).then(r=>r.arrayBuffer()).then(buf=>audioCtx.decodeAudioData(buf)).then(decoded=>{ if(sourceNode) sourceNode.stop(); sourceNode=audioCtx.createBufferSource(); sourceNode.buffer=decoded; sourceNode.connect(audioCtx.destination); sourceNode.start(); }); }
+  latticeGroup.clear(); data.entropy.forEach((e,i)=>{ let geo=new THREE.SphereGeometry(0.05,16,16); let mat=new THREE.MeshPhongMaterial({color:0xffffff,emissive:0x111111,specular:0x555555,shininess:30}); let sphere=new THREE.Mesh(geo,mat); sphere.position.x=Math.cos(i+data.angle)*2*data.zoom; sphere.position.y=Math.sin(i+data.angle)*2*data.zoom; latticeGroup.add(sphere); }); updateColors(data.emotion);
+  if(data.oracle){ let odiv=document.getElementById('oracle'); let p=document.createElement('div'); p.innerText=data.oracle; odiv.prepend(p); }
+});
+let light=new THREE.PointLight(0xffffff,1,100); light.position.set(5,5,5); scene.add(light);
+function animate(){ requestAnimationFrame(animate); flower.rotation.z+=0.002; spiral.rotation.z+=0.001; renderer.render(scene,camera);} animate();
+window.addEventListener('resize',()=>{ camera.aspect=window.innerWidth/window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth,window.innerHeight); });
+</script>
+</body></html>
+"""
+
+# ---------------- RUN ----------------
+if __name__=="__main__": socketio.run(app,host="0.0.0.0",port=5000,debug=True)
